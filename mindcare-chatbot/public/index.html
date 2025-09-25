@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCare - Student Mental Health Support</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        background: '#f9fafb',
+                        foreground: '#1f2937',
+                        muted: '#f3f4f6',
+                        'muted-foreground': '#6b7280',
+                        accent: '#dbeafe',
+                        destructive: '#dc2626',
+                        warning: '#f59e0b'
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                        'pulse-glow': 'pulseGlow 2s infinite'
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 5px rgba(37, 99, 235, 0.5)' },
+                            '50%': { boxShadow: '0 0 20px rgba(37, 99, 235, 0.8)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+        }
+        .chat-container {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+                0 4px 6px -2px rgb(0 0 0 / 0.05);
+            width: 100%;
+            max-width: 1024px;
+            height: 700px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+        }
+        .chat-header {
+            background-color: #2563eb;
+            color: white;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+        }
+        .chat-subheader {
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.5rem 2rem;
+            font-weight: 500;
+            font-size: 1rem;
+            text-align: center;
+            border-bottom-left-radius: 1rem;
+            border-bottom-right-radius: 1rem;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem 2rem;
+            overflow-y: auto;
+            background-color: #f9fafb;
+        }
+        .message {
+            margin-bottom: 1rem;
+            animation: fadeIn 0.3s ease-in;
+        }
+        .message.user {
+            text-align: right;
+        }
+        .message.bot {
+            text-align: left;
+        }
+        .message-content {
+            display: inline-block;
+            padding: 1rem 1.5rem;
+            border-radius: 1.5rem;
+            max-width: 70%;
+            word-wrap: break-word;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        .message.user .message-content {
+            background-color: #2563eb;
+            color: white;
+        }
+        .message.bot .message-content {
+            background-color: white;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+        }
+        .mood-indicator {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.75rem;
+            font-size: 0.75rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        .mood-stressed {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        .mood-anxious {
+            background-color: #e0e7ff;
+            color: #4338ca;
+        }
+        .mood-depressed {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        .mood-happy {
+            background-color: #d1fae5;
+            color: #166534;
+        }
+        .mood-normal {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        .mood-emergency {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        .mood-homesick {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        .mood-financial {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        .mood-relationship {
+            background-color: #ede9fe;
+            color: #5b21b6;
+        }
+        .mood-academic {
+            background-color: #d1fae5;
+            color: #15803d;
+        }
+        .emergency-alert {
+            background-color: #fee2e2;
+            color: #991b1b;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border-left: 0.25rem solid #dc2626;
+            margin: 1rem 0;
+            font-weight: 600;
+        }
+        .chat-input {
+            display: flex;
+            padding: 1.5rem 2rem;
+            background-color: white;
+            border-top: 1px solid #e5e7eb;
+        }
+        #messageInput {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 9999px;
+            font-size: 1rem;
+            outline: none;
+            margin-right: 1rem;
+        }
+        #sendBtn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background-color 0.2s;
+        }
+        #sendBtn:hover {
+            background-color: #1d4ed8;
+        }
+        #sendBtn:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+        .typing {
+            font-style: italic;
+            color: #6b7280;
+        }
+        .status {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background-color: #22c55e;
+            color: white;
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            box-shadow: 0 0 10px #22c55e;
+            z-index: 1000;
+        }
+        .language-selector {
+            margin-right: 1rem;
+        }
+        select {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 9999px;
+            background-color: white;
+            font-size: 0.875rem;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(1rem);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .feature-suggestions {
+            margin-top: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .feature-btn {
+            background-color: #e5e7eb;
+            border: none;
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .feature-btn:hover {
+            background-color: #2563eb;
+            color: white;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-background">
+    <div class="status fixed top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm shadow-lg z-50" id="connectionStatus">🟡 Connecting...</div>
+
+    <div class="min-h-screen pt-20 px-4 pb-8 max-w-7xl mx-auto">
+        <!-- Emergency Banner -->
+        <div class="mb-8 bg-red-50 border border-red-200 rounded-lg p-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="text-red-600 mr-3">⚠️</div>
+                    <div>
+                        <div class="font-semibold text-red-800">Emergency Support Available</div>
+                        <div class="text-red-600 text-sm">If you're in crisis, help is available 24/7</div>
+                    </div>
+                </div>
+                <button class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700 transition-colors">
+                    📞 Call Helpline
+                </button>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-8">
+            <!-- Sidebar with Quick Responses -->
+            <div class="lg:col-span-4">
+                <div class="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
+                    <div class="mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Quick Start Topics</h3>
+                        <p class="text-gray-600 text-sm">Common challenges Indian students face</p>
+                    </div>
+                    <div class="space-y-3" id="quickResponses">
+                        <button class="quick-response w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-sm" data-text="I'm feeling anxious about upcoming exams 📚">
+                            I'm feeling anxious about upcoming exams 📚
+                        </button>
+                        <button class="quick-response w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-sm" data-text="Having trouble sleeping properly 😴">
+                            Having trouble sleeping properly 😴
+                        </button>
+                        <button class="quick-response w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-sm" data-text="Feeling overwhelmed with studies and pressure 😰">
+                            Feeling overwhelmed with studies and pressure 😰
+                        </button>
+                        <button class="quick-response w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-sm" data-text="Missing home and family deeply 🏠">
+                            Missing home and family deeply 🏠
+                        </button>
+                        <button class="quick-response w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-sm" data-text="Need help managing competitive exam stress 📖">
+                            Need help managing competitive exam stress 📖
+                        </button>
+                        <button class="quick-response w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-sm" data-text="Feeling lonely or socially isolated 😔">
+                            Feeling lonely or socially isolated 😔
+                        </button>
+                        <button class="quick-response w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-sm" data-text="Worried about future career prospects 💼">
+                            Worried about future career prospects 💼
+                        </button>
+                        <button class="quick-response w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-sm" data-text="Having family expectations pressure 👨‍👩‍👧‍👦">
+                            Having family expectations pressure 👨‍👩‍👧‍👦
+                        </button>
+                        <button class="quick-response w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-sm" data-text="Dealing with financial stress 💰">
+                            Dealing with financial stress 💰
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Chat Area -->
+            <div class="lg:col-span-8">
+                <div class="bg-white rounded-lg shadow-lg border border-gray-200 h-full flex flex-col">
+                    <!-- Chat Header -->
+                    <div class="bg-blue-600 text-white p-6 rounded-t-lg">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                                🤖
+                            </div>
+                            <div>
+                                <h1 class="text-2xl font-bold">🧠 MindCare Student Support</h1>
+                                <p class="text-blue-100">Your compassionate AI companion for mental wellness</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Messages -->
+                    <div class="chat-messages flex-1 p-6 overflow-y-auto bg-gray-50" id="chatMessages">
+                        <div class="message bot animate-fade-in">
+                            <div class="flex gap-4">
+                                <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold">
+                                    AI
+                                </div>
+                                <div class="bg-white p-4 rounded-lg shadow-sm max-w-[75%]">
+                                    <div class="text-gray-900">
+                                        <div class="mood-indicator mood-happy">Welcome! 😊</div>
+                                        Hello! I'm here to support you through your student journey. How are you feeling today? You can share anything that's on your mind - whether it's stress, homesickness, academic pressure, or just wanting to chat. I'm here to listen and help. 💙
+                                        <br><br>
+                                        <strong>Try saying:</strong><br>
+                                        • "मुझे तनाव हो रहा है" (Hindi)<br>
+                                        • "আমি দুশ্চিন্তিত" (Bengali)<br>
+                                        • "मी चिंतेत आहे" (Marathi)<br>
+                                        • "நான் பதற்றமாக இருக்கிறேன்" (Tamil)<br>
+                                        • "నేను ఆందోళనలో ఉన్నాను" (Telugu)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Input -->
+                    <div class="border-t border-gray-200 p-6 bg-white">
+                        <div class="flex gap-3">
+                            <select id="languageHint" class="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white">
+                                <option value="hi">🇮🇳 हिंदी (Hindi)</option>
+                                <option value="en">🇮🇳 English (Indian)</option>
+                                <option value="bn">🇮🇳 বাংলা (Bengali)</option>
+                                <option value="te">🇮🇳 తెలుగు (Telugu)</option>
+                                <option value="mr">🇮🇳 मराठी (Marathi)</option>
+                                <option value="ta">🇮🇳 தமிழ் (Tamil)</option>
+                                <option value="gu">🇮🇳 ગુજરાતી (Gujarati)</option>
+                                <option value="kn">🇮🇳 ಕನ್ನಡ (Kannada)</option>
+                                <option value="ml">🇮🇳 മലയാളം (Malayalam)</option>
+                                <option value="or">🇮🇳 ଓଡ଼ିଆ (Odia)</option>
+                                <option value="pa">🇮🇳 ਪੰਜਾਬੀ (Punjabi)</option>
+                                <option value="as">🇮🇳 অসমীয়া (Assamese)</option>
+                                <option value="ur">🇮🇳 اردو (Urdu)</option>
+                                <option value="mai">🇮🇳 मैथिली (Maithili)</option>
+                                <option value="sat">🇮🇳 संताली (Santali)</option>
+                                <option value="ks">🇮🇳 कॉशुर / کٲشُر (Kashmiri)</option>
+                                <option value="ne">🇮🇳 नेपाली (Nepali)</option>
+                                <option value="sd">🇮🇳 سنڌي (Sindhi)</option>
+                                <option value="doi">🇮🇳 डोगरी (Dogri)</option>
+                                <option value="mni">🇮🇳 ꯃꯤꯇꯩ ꯂꯣꯟ (Manipuri)</option>
+                                <option value="brx">🇮🇳 बड़ो (Bodo)</option>
+                                <option value="kok">🇮🇳 कोंकणी (Konkani)</option>
+                            </select>
+                            <input type="text" id="messageInput" placeholder="अपना संदेश यहाँ लिखें..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <button id="sendBtn" onclick="sendMessage()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                                Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Test connection on page load
+        fetch('/health')
+            .then(response => response.json())
+            .then(data => {
+                console.log('✅ Server connection successful:', data);
+                const status = document.getElementById('connectionStatus');
+                if (data.aiConfigured) {
+                    status.textContent = '🟢 AI Ready';
+                    status.style.background = '#28a745';
+                } else {
+                    status.textContent = '🟡 AI Not Configured';
+                    status.style.background = '#ffc107';
+                }
+            })
+            .catch(error => {
+                console.error('❌ Server connection failed:', error);
+                const status = document.getElementById('connectionStatus');
+                status.textContent = '🔴 Offline';
+                status.style.background = '#dc3545';
+            });
+
+        let conversationHistory = [];
+
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            // Disable input
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Sending...';
+            
+            // Add user message
+            addMessage(message, true);
+            input.value = '';
+            
+            // Add typing indicator
+            addMessage('MindCare is thinking... 🤔', false, null, true);
+
+            try {
+                console.log('Sending message:', message);
+                
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        message: message,
+                        conversationHistory: conversationHistory.slice(-5)
+                    })
+                });
+
+                console.log('Response status:', response.status);
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                // Remove typing indicator
+                removeTypingIndicator();
+                
+                // Add bot response
+                addMessage(data.response || 'I understand. How else can I support you?', false, data.mood, false, data.emergency);
+                
+                // Update conversation history
+                conversationHistory.push({
+                    user: message,
+                    assistant: data.response,
+                    mood: data.mood,
+                    timestamp: new Date(),
+                    language: data.language
+                });
+                
+                // Update connection status
+                document.getElementById('connectionStatus').textContent = '🟢 AI Active';
+                document.getElementById('connectionStatus').style.background = '#28a745';
+                
+            } catch (error) {
+                console.error('Chat error:', error);
+                removeTypingIndicator();
+                addMessage('Sorry, I encountered an issue. Please check the console for details. 💙', false);
+                
+                // Update connection status
+                document.getElementById('connectionStatus').textContent = '🔴 Error';
+                document.getElementById('connectionStatus').style.background = '#dc3545';
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send';
+            }
+        }
+
+        function addMessage(content, isUser = false, mood = null, isTyping = false, emergency = false) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'} ${isTyping ? 'typing' : ''} animate-fade-in`;
+
+            if (isTyping) {
+                messageDiv.id = 'typing-indicator';
+            }
+
+            let messageHTML = '';
+
+            if (isUser) {
+                // User message layout
+                messageHTML = `
+                    <div class="flex gap-4 flex-row-reverse">
+                        <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold">
+                            You
+                        </div>
+                        <div class="bg-blue-600 text-white p-4 rounded-lg shadow-sm max-w-[75%]">
+                            <div class="text-white">
+                                ${content}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Bot message layout
+                let moodIndicator = '';
+                if (mood && !isTyping) {
+                    const moodEmojis = {
+                        'stressed': '😰',
+                        'anxious': '😟',
+                        'depressed': '😔',
+                        'happy': '😊',
+                        'homesick': '🏠',
+                        'financial': '💰',
+                        'relationship': '💔',
+                        'academic': '📚',
+                        'emergency': '🆘',
+                        'normal': '😌'
+                    };
+                    const emoji = moodEmojis[mood] || '😌';
+                    moodIndicator = `<div class="mood-indicator mood-${mood}">Detected: ${mood} ${emoji}</div>`;
+                }
+
+                let emergencyAlert = '';
+                if (emergency) {
+                    emergencyAlert = `<div class="emergency-alert">🚨 EMERGENCY: Please seek immediate help. Contact a crisis hotline, trusted person, or emergency services.</div>`;
+                }
+
+                messageHTML = `
+                    <div class="flex gap-4">
+                        <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold">
+                            AI
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm max-w-[75%]">
+                            <div class="text-gray-900">
+                                ${moodIndicator}
+                                ${emergencyAlert}
+                                ${content}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            messageDiv.innerHTML = messageHTML;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const typing = document.getElementById('typing-indicator');
+            if (typing) typing.remove();
+        }
+
+        // Enter key support
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !document.getElementById('sendBtn').disabled) {
+                sendMessage();
+            }
+        });
+
+        // Focus on input when page loads
+        window.addEventListener('load', function() {
+            document.getElementById('messageInput').focus();
+
+            // Add event listeners for quick response buttons
+            const quickButtons = document.querySelectorAll('.quick-response');
+            quickButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const text = this.getAttribute('data-text');
+                    if (text) {
+                        sendMessage(text);
+                    }
+                });
+            });
+        });
+
+        // Indian languages selector with placeholders
+        document.getElementById('languageHint').addEventListener('change', function() {
+            const language = this.value;
+            const placeholders = {
+                hi: 'अपना संदेश यहाँ लिखें...',
+                en: 'Type your message here...',
+                bn: 'আপনার বার্তা এখানে লিখুন...',
+                te: 'మీ సందేశాన్ని ఇక్కడ టైప్ చేయండి...',
+                mr: 'तुमचा संदेश येथे टाइप करा...',
+                ta: 'உங்கள் செய்தியை இங்கே தட்டச்சு செய்யுங்கள்...',
+                ur: 'اپنا پیغام یہاں ٹائپ کریں...',
+                gu: 'તમારો સંદેશ અહીં ટાઇપ કરો...',
+                kn: 'ನಿಮ್ಮ ಸಂದೇಶವನ್ನು ಇಲ್ಲಿ ಟೈಪ್ ಮಾಡಿ...',
+                ml: 'നിങ്ങളുടെ സന്ദേശം ഇവിടെ ടൈപ്പ് ചെയ്യുക...',
+                or: 'ଏଠାରେ ଆପଣଙ୍କ ବାର୍ତ୍ତା ଟାଇପ୍ କରନ୍ତୁ...',
+                pa: 'ਆਪਣਾ ਸੰਦੇਸ਼ ਇੱਥੇ ਟਾਈਪ ਕਰੋ...',
+                as: 'আপোনাৰ বাৰ্তা ইয়াত টাইপ কৰক...',
+                mai: 'अपन संदेश एतय लिखू...',
+                sat: 'ᱟᱢᱟᱜ ᱠᱟᱛᱷᱟ ᱱᱚᱸᱰᱮ ᱚᱞ ᱢᱮ...',
+                ks: 'پنۄن پیغام ییتے ٹایپ کریو...',
+                ne: 'तपाईंको सन्देश यहाँ टाइप गर्नुहोस्...',
+                sd: 'پنهنجو پيغام هتي ٽائيپ ڪريو...',
+                doi: 'अपना संदेश इत्थै लिखो...',
+                mni: 'ꯅꯍꯥꯛꯀꯤ ꯃꯦꯁꯦꯖ ꯃꯐꯃꯁꯤꯗꯥ ꯇꯥꯏꯞ ꯇꯧꯕꯤꯌꯨ...',
+                brx: 'नंगौ संदेश बेयाव लिख...',
+                kok: 'तुमचो संदेश हांगा बरय...'
+            };
+            
+            const input = document.getElementById('messageInput');
+            input.placeholder = placeholders[language] || placeholders.hi;
+            
+            // Add language confirmation message
+            const welcomeMessages = {
+                hi: 'भाषा प्राथमिकता हिंदी में अपडेट की गई। आज मैं आपकी कैसे मदद कर सकता हूं?',
+                en: 'Language preference updated to English. How can I support you today?',
+                bn: 'ভাষার পছন্দ বাংলায় আপডেট করা হয়েছে। আজ আমি কীভাবে আপনাকে সহায়তা করতে পারি?',
+                te: 'భాష ప్రాధాన్యత తెలుగులో నవీకరించబడింది। ఈ రోజు నేను మిమ్మల్ని ఎలా సహాయం చేయగలను?',
+                mr: 'भाषा प्राधान्य मराठीत अपडेट केले आहे। आज मी तुम्हाला कशी मदत करू शकतो?',
+                ta: 'மொழி விருப்பம் தமிழில் புதுப்பிக்கப்பட்டது। இன்று நான் உங்களை எப்படி ஆதரிக்க முடியும்?',
+                ur: 'زبان کی ترجیح اردو میں اپڈیٹ کر دی گئی۔ آج میں آپ کی کیسے مدد کر سکتا ہوں?',
+                gu: 'ભાષાની પસંદગી ગુજરાતીમાં અપડેટ કરવામાં આવી છે। આજે હું તમને કેવી રીતે મદદ કરી શકું?',
+                kn: 'ಭಾಷೆಯ ಆದ್ಯತೆಯನ್ನು ಕನ್ನಡದಲ್ಲಿ ನವೀಕರಿಸಲಾಗಿದೆ. ಇಂದು ನಾನು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಬಹುದು?',
+                ml: 'ഭാഷാ മുൻഗണന മലയാളത്തിൽ അപ്‌ഡേറ്റ് ചെയ്തു. ഇന്ന് ഞാൻ നിങ്ങളെ എങ്ങനെ സഹായിക്കാം?',
+                or: 'ଭାଷା ପସନ୍ଦ ଓଡ଼ିଆରେ ଅପଡେଟ୍ ହୋଇଛି। ଆଜି ମୁଁ ଆପଣଙ୍କୁ କିପରି ସାହାଯ୍ୟ କରିପାରିବି?',
+                pa: 'ਭਾਸ਼ਾ ਦੀ ਤਰਜੀਹ ਪੰਜਾਬੀ ਵਿੱਚ ਅਪਡੇਟ ਕਰ ਦਿੱਤੀ ਗਈ। ਅੱਜ ਮੈਂ ਤੁਹਾਡੀ ਕਿਵੇਂ ਮਦਦ ਕਰ ਸਕਦਾ ਹਾਂ?',
+                as: 'ভাষাৰ পছন্দ অসমীয়াত আপডেট কৰা হৈছে। আজি মই আপোনাক কেনেকৈ সহায় কৰিব পাৰোঁ?'
+            };
+            
+            if (welcomeMessages[language]) {
+                addMessage(welcomeMessages[language], false, 'normal');
+            }
+        });
+    </script>
+</body>
+</html>
