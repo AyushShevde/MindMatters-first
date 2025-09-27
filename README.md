@@ -125,7 +125,7 @@ MindMatters bridges the mental health gap through:
 
 1. **Clone the Repository**
    ```bash
-   git clone <your-repository-url>
+   git clone https://github.com/manmeetsantre/tree.git
    cd mindmatters
    ```
 
