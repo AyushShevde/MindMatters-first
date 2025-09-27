@@ -299,8 +299,8 @@ GEMINI_API_KEY=your_production_api_key
 - **Video Editing && Project Manager**: [Ananya Munshi] - User Experience & Accessibility
 
 ### Advisors
-- **Mental Health Experts**: Clinical psychologists and counselors
-- **Academic Advisors**: Professors from participating universities
+- **Mental Health Experts**: Clinical psychologists and counselors of our team members (more details in ppt)
+- **Academic Advisors**: Professor H.B. Mali
 - **Technical Mentors**: Industry professionals in healthcare technology
 
 **Contact**: mindmatters.sih2025@gmail.com
