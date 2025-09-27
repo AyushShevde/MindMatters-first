@@ -2,7 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { getDb } from "../setup";
-import { signJwt } from "../middleware";
+import { signJwt, requireAuth } from "../middleware";
 import { sendEmail } from "../email";
 import crypto from "crypto";
 
@@ -112,6 +112,10 @@ router.post("/reset-password", (req, res) => {
   db.prepare("DELETE FROM reset_tokens WHERE token = ?").run(token);
   db.close();
   return res.json({ success: true });
+});
+
+router.get("/me", requireAuth, (req, res) => {
+  res.json({ user: req.user });
 });
 
 export default router;

@@ -69,7 +69,7 @@ export default function Donation() {
 
   if (showThankYou) {
     return (
-      <div className="min-h-screen bg-background pt-20 pb-12" style={{ backgroundImage: `url("${donationBgUrl}")`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', backgroundAttachment: 'fixed' }}>
+      <div className="min-h-screen bg-background pt-20 pb-12" style={{ background: 'linear-gradient(135deg, #000000 0%, #0000ff 100%)' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-8">
             <div className="bg-gradient-wellness p-6 rounded-full w-24 h-24 mx-auto flex items-center justify-center">
@@ -136,7 +136,7 @@ export default function Donation() {
   }
 
   return (
-    <div className="min-h-screen bg-background pt-20 pb-12" style={{ backgroundImage: `url("${donationBgUrl}")`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', backgroundAttachment: 'fixed' }}>
+    <div className="min-h-screen bg-background pt-20 pb-12" style={{ background: 'linear-gradient(135deg, #000000 0%, #0000ff 100%)' }}>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <PageHeader
           icon={Heart}

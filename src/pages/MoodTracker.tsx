@@ -177,8 +177,8 @@ export default function MoodTracker() {
         </div>
 
         <div className="flex justify-end mb-6">
-          <Button onClick={() => { window.location.href = 'http://localhost:8080/mood'; }}>
-            Next
+          <Button onClick={() => { window.location.href = 'http://127.0.0.1:5000/'; }}>
+            Advanced Video Analysis 
           </Button>
         </div>
 
