@@ -291,11 +291,12 @@ GEMINI_API_KEY=your_production_api_key
 ## 👥 Team
 
 ### Core Development Team
-- **Project Lead**: [Name] - Full-stack Development & AI Integration
-- **Frontend Developer**: [Name] - React/TypeScript & UI/UX
-- **Backend Developer**: [Name] - Node.js/Express & Database Design
-- **ML Engineer**: [Name] - AI Models & Data Science
-- **UI/UX Designer**: [Name] - User Experience & Accessibility
+- **Project Lead && Project Architect **: [Ayush Shevde] - Full-stack Development & AI Integration
+- **Frontend Developer**: [Manmeet Santre] - React/TypeScript & UI/UX
+- **Backend Developer**: [Anvit Panhalkar] - Node.js/Express & Database Design
+- **ML Engineer**: [Shreesh Jugade] - AI Models & Data Science
+- **UI/UX Designer**: [Nihar Bapat] - User Experience & Accessibility
+- **Video Editing && Project Manager**: [Ananya Munshi] - User Experience & Accessibility
 
 ### Advisors
 - **Mental Health Experts**: Clinical psychologists and counselors
