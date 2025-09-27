@@ -291,7 +291,7 @@ GEMINI_API_KEY=your_production_api_key
 ## 👥 Team
 
 ### Core Development Team
-- **Project Lead && Project Architect **: [Ayush Shevde] - Full-stack Development & AI Integration
+- **Project Lead && Project Architect**: [Ayush Shevde] - Full-stack Development & AI Integration
 - **Frontend Developer**: [Manmeet Santre] - React/TypeScript & UI/UX
 - **Backend Developer**: [Anvit Panhalkar] - Node.js/Express & Database Design
 - **ML Engineer**: [Shreesh Jugade] - AI Models & Data Science
