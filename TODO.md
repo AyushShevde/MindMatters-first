@@ -1,12 +1,15 @@
-# TODO: Mood Tracker Redirect Implementation
+# TODO: Fix Console Errors
 
-## Completed Tasks
-- [x] Update Navigation.tsx to make the mood tracker button redirect to http://127.0.0.1:5002
-- [x] Update moodtracker/index.html to make the "Next" button redirect to http://localhost:8080/mood
+## 401 Unauthorized Errors on Admin Endpoints
+- [x] Ensure admin seed data runs on server startup (edit server/src/index.ts to call seedAdminData())
+- [x] Add 401 error handling in admin page fetches (AdminProfiles.tsx, AdminAssessments.tsx, AdminEntries.tsx, Analytics.tsx) - show toast or redirect to login
+- [ ] Test: Restart server, login as admin, verify no 401 on /admin/* endpoints
 
-## Followup Steps
-- [ ] Test the redirects by running the apps and clicking the buttons
-  - Start the main app (likely on localhost:8080)
-  - Start the moodtracker Flask app on 127.0.0.1:5002
-  - Click the mood tracker button in the menubar to verify redirect to 127.0.0.1:5002
-  - On the moodtracker page, upload an image or take a photo, then click "Next" to verify redirect to localhost:8080/mood
+## Radix UI Dialog Accessibility Errors
+- [x] Locate Dialog usages in components (read RatingPopup.tsx, QuoteOfTheDayPopup.tsx, etc.)
+- [x] Add DialogTitle and DialogDescription inside DialogContent for a11y (already present in found components)
+- [ ] If titles should be hidden, use VisuallyHidden wrapper (not needed for current components)
+- [ ] Test: Open modals/popups, verify console errors gone
+
+## Followup
+- [ ] Run dev server and test fixes

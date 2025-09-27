@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Star } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
 import { Button } from './ui/button';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -13,20 +13,11 @@ interface RatingPopupProps {
 
 export function RatingPopup({ isOpen, onClose, onSubmit, onSkip }: RatingPopupProps) {
   const [rating, setRating] = useState(0);
-  const [hoveredRating, setHoveredRating] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { t } = useLanguage();
 
   const handleStarClick = (starRating: number) => {
     setRating(starRating);
-  };
-
-  const handleStarHover = (starRating: number) => {
-    setHoveredRating(starRating);
-  };
-
-  const handleStarLeave = () => {
-    setHoveredRating(0);
   };
 
   const handleSubmit = () => {
@@ -37,7 +28,6 @@ export function RatingPopup({ isOpen, onClose, onSubmit, onSkip }: RatingPopupPr
         onClose();
         setIsSubmitted(false);
         setRating(0);
-        setHoveredRating(0);
       }, 1500);
     }
   };
@@ -46,10 +36,9 @@ export function RatingPopup({ isOpen, onClose, onSubmit, onSkip }: RatingPopupPr
     onSkip();
     onClose();
     setRating(0);
-    setHoveredRating(0);
   };
 
-  const displayRating = hoveredRating || rating;
+  const displayRating = rating;
   const showSubmitButton = rating > 0;
 
   return (
@@ -59,6 +48,9 @@ export function RatingPopup({ isOpen, onClose, onSubmit, onSkip }: RatingPopupPr
           <DialogTitle className="text-center text-xl font-semibold">
             {t('rating.title')}
           </DialogTitle>
+          <DialogDescription className="text-center">
+            {t('rating.instructions')}
+          </DialogDescription>
         </DialogHeader>
         
         <div className="flex flex-col items-center space-y-6 py-4">
@@ -68,18 +60,17 @@ export function RatingPopup({ isOpen, onClose, onSubmit, onSkip }: RatingPopupPr
               <button
                 key={star}
                 onClick={() => handleStarClick(star)}
-                onMouseEnter={() => handleStarHover(star)}
-                onMouseLeave={handleStarLeave}
-                className="transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-full"
+                className="cursor-pointer border-none bg-transparent p-0 w-12 h-12 flex items-center justify-center"
                 disabled={isSubmitted}
+                style={{ border: 'none', background: 'transparent', padding: 0 }}
               >
                 <Star
-                  className={`h-12 w-12 transition-colors duration-200 ${
+                  className={`h-8 w-8 ${
                     star <= displayRating
-                      ? 'text-yellow-400 fill-yellow-400 drop-shadow-lg'
+                      ? 'text-yellow-400 fill-yellow-400'
                       : 'text-gray-300 fill-gray-300'
                   } ${
-                    isSubmitted ? 'opacity-50' : 'hover:text-yellow-300 hover:fill-yellow-300'
+                    isSubmitted ? 'opacity-50' : ''
                   }`}
                 />
               </button>

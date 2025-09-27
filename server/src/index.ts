@@ -1,7 +1,10 @@
 import express from "express";
 import cors from "cors";
 import path from "path";
+import { createServer } from "http";
+import { Server } from "socket.io";
 import { ensureDatabase } from "./setup";
+import { seedAdminData } from "./data/adminSeed";
 import authRouter from "./routes/auth";
 import adminRouter from "./routes/admin";
 import profileRouter from "./routes/profile";
@@ -10,14 +13,30 @@ import activitiesRouter from "./routes/activities";
 import mentorsRouter from "./routes/mentors";
 import communityRouter from "./routes/community";
 import bookingsRouter from "./routes/bookings";
+import assessmentRouter from "./routes/assessment";
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server, {
+  cors: { origin: true, credentials: true }
+});
 const PORT = process.env.PORT ? Number(process.env.PORT) : 4000;
 
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 
 ensureDatabase();
+seedAdminData();
+
+io.on('connection', (socket) => {
+  console.log('Admin connected:', socket.id);
+  socket.on('disconnect', () => {
+    console.log('Admin disconnected:', socket.id);
+  });
+});
+
+// Make io available to routes
+app.set('io', io);
 
 app.get("/health", (_req, res) => {
   res.json({ status: "ok" });
@@ -44,10 +63,11 @@ app.use("/activities", activitiesRouter);
 app.use("/mentors", mentorsRouter);
 app.use("/community", communityRouter);
 app.use("/bookings", bookingsRouter);
+app.use("/assessment", assessmentRouter);
 
 // Note: Static file serving disabled in dev to avoid ESM __dirname issues
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`API listening on http://localhost:${PORT}`);
 });

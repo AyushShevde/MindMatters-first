@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -31,6 +32,8 @@ import AccessibilityStatement from "./pages/Accessibility";
 import NotFound from "./pages/NotFound";
 import AdminEntries from "./pages/AdminEntries";
 import AdminProfiles from "./pages/AdminProfiles";
+import AdminAssessments from "./pages/AdminAssessments";
+import AdminDashboard from "./pages/AdminDashboard";
 import Analytics from "./pages/Analytics";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -50,6 +53,16 @@ const AppContent = () => {
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (!token) {
       return <Navigate to="/signin" replace />;
+    }
+    return children;
+  };
+
+  const RequireAdmin = ({ children }: { children: React.ReactElement }) => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const userRaw = typeof window !== "undefined" ? localStorage.getItem("user") : null;
+    const user = userRaw ? JSON.parse(userRaw) : null;
+    if (!token || user?.role !== 'admin') {
+      return <Navigate to="/" replace />;
     }
     return children;
   };
@@ -81,10 +94,12 @@ const AppContent = () => {
         <Route path="/about" element={<RequireAuth><AboutUs /></RequireAuth>} />
         <Route path="/profile" element={<RequireAuth><MyProfile /></RequireAuth>} />
         <Route path="/privacy" element={<RequireAuth><PrivacyPolicy /></RequireAuth>} />
-        <Route path="/analytics" element={<Analytics />} />
-        <Route path="/admin" element={<Analytics />} />
-        <Route path="/admin/entries" element={<RequireAuth><AdminEntries /></RequireAuth>} />
-        <Route path="/admin/profiles" element={<RequireAuth><AdminProfiles /></RequireAuth>} />
+        <Route path="/analytics" element={<RequireAdmin><AdminDashboard /></RequireAdmin>} />
+        <Route path="/admin" element={<RequireAdmin><AdminDashboard /></RequireAdmin>} />
+        <Route path="/admin-entries" element={<RequireAdmin><AdminEntries /></RequireAdmin>} />
+        <Route path="/admin-profiles" element={<RequireAdmin><AdminProfiles /></RequireAdmin>} />
+        <Route path="/admin-assessments" element={<RequireAdmin><AdminAssessments /></RequireAdmin>} />
+        <Route path="/analytics-page" element={<RequireAdmin><Analytics /></RequireAdmin>} />
         <Route path="/terms" element={<RequireAuth><TermsOfService /></RequireAuth>} />
         <Route path="/cookies" element={<RequireAuth><CookiePolicy /></RequireAuth>} />
         <Route path="/accessibility" element={<RequireAuth><AccessibilityStatement /></RequireAuth>} />

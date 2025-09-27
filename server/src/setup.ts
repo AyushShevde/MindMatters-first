@@ -1,9 +1,10 @@
 import Database from "better-sqlite3";
 import path from "path";
 import bcrypt from "bcryptjs";
+import { seedAdminData } from "./data/adminSeed";
 
 export const getDb = () => {
-  const dbPath = path.join(process.cwd(), "server", "data.sqlite");
+  const dbPath = path.join(__dirname, "..", "..", "data.sqlite");
   const db = new Database(dbPath);
   return db;
 };
@@ -131,6 +132,15 @@ export const ensureDatabase = () => {
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       FOREIGN KEY(counselor_id) REFERENCES counselors(id)
     );
+    CREATE TABLE IF NOT EXISTS assessments (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      assessment_type TEXT NOT NULL,
+      answers TEXT NOT NULL,
+      results TEXT NOT NULL,
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      FOREIGN KEY(user_id) REFERENCES users(id)
+    );
   `);
 
   // Seed counselors if empty
@@ -155,6 +165,25 @@ export const ensureDatabase = () => {
     }
   } catch {}
 
+  // Migration: add assessment fields to profiles if missing
+  try {
+    const profileCols = db.prepare("PRAGMA table_info(profiles)").all() as any[];
+    const hasGad7 = profileCols.some((c) => c.name === "gad7_score");
+    const hasPhq9 = profileCols.some((c) => c.name === "phq9_score");
+    const hasGhq12 = profileCols.some((c) => c.name === "ghq12_score");
+    if (!hasGad7) {
+      db.exec(`ALTER TABLE profiles ADD COLUMN gad7_score REAL;`);
+    }
+    if (!hasPhq9) {
+      db.exec(`ALTER TABLE profiles ADD COLUMN phq9_score REAL;`);
+    }
+    if (!hasGhq12) {
+      db.exec(`ALTER TABLE profiles ADD COLUMN ghq12_score REAL;`);
+    }
+  } catch (error) {
+    console.warn('Migration warning:', error);
+  }
+
   // Seed a default admin user if none exists
   const name = "Admin";
   const email = "admin@mindmatters.local";
@@ -163,6 +192,8 @@ export const ensureDatabase = () => {
     "INSERT OR IGNORE INTO users (name, email, password_hash, role) VALUES (?, ?, ?, 'admin')"
   ).run(name, email, passwordHash);
   db.close();
+
+  // Seed additional admin data is now called in index.ts
 };
 
 

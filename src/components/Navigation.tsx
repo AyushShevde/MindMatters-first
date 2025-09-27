@@ -61,6 +61,8 @@ export function Navigation() {
     setAuthUser(userRaw ? JSON.parse(userRaw) : null);
   }, [location.pathname]);
 
+  const filteredNavItems = navItems.filter(item => item.name !== 'nav.admin' || authUser?.role === 'admin');
+
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -86,7 +88,7 @@ export function Navigation() {
                 </div>
                 <ScrollArea className="flex-1 px-2 pb-6">
                   <div className="flex flex-col space-y-1">
-                    {navItems.map((item) => {
+                    {filteredNavItems.map((item) => {
                       const Icon = item.icon;
                       const isActive = location.pathname === item.href;
                       const isChatbot = item.name === "nav.ai";

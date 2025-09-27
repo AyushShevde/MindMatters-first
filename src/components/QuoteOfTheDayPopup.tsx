@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Lightbulb, X, Calendar, Star } from "lucide-react";
@@ -37,6 +37,9 @@ export function QuoteOfTheDayPopup() {
                 <DialogTitle className="text-lg font-bold text-white">
                   Quote of the Day
                 </DialogTitle>
+                <DialogDescription className="text-white/70 text-xs">
+                  Daily inspiration to start your day
+                </DialogDescription>
                 <div className="flex items-center space-x-1 mt-1">
                   <Calendar className="h-3 w-3 text-white/70" />
                   <span className="text-white/70 text-xs">

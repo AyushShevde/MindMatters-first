@@ -52,8 +52,8 @@
         }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-            color: #1f2937;
+            background: linear-gradient(180deg, #0d1117 0%, #1a1f2c 100%);
+            color: #e6edf3;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -113,21 +113,26 @@
         }
         .message-content {
             display: inline-block;
-            padding: 1rem 1.5rem;
-            border-radius: 1.5rem;
-            max-width: 70%;
+            padding: 1.25rem 1.75rem;
+            border-radius: 20px;
+            max-width: 75%;
             word-wrap: break-word;
             font-size: 1rem;
-            line-height: 1.5;
+            line-height: 1.6;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            letter-spacing: 0.025em;
         }
         .message.user .message-content {
-            background-color: #2563eb;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
             color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
         .message.bot .message-content {
-            background-color: white;
-            color: #374151;
-            border: 1px solid #e5e7eb;
+            background: rgba(255, 255, 255, 0.1);
+            color: #e6edf3;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
         }
         .mood-indicator {
             display: inline-block;
@@ -237,12 +242,55 @@
         .language-selector {
             margin-right: 1rem;
         }
-        select {
-            padding: 0.5rem;
-            border: 1px solid #d1d5db;
-            border-radius: 9999px;
-            background-color: white;
+        #languageHint {
+            background: rgba(5, 10, 30, 0.95);
+            border: 1px solid rgba(37, 99, 235, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            color: #ffffff;
+            padding: 1rem 1.25rem;
             font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            min-width: 200px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 1.25em 1.25em;
+            padding-right: 2.5rem;
+        }
+        #languageHint:hover {
+            background: rgba(10, 20, 50, 0.95);
+            border-color: #2563eb;
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+        }
+        #languageHint:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.6), 0 4px 16px rgba(37, 99, 235, 0.4);
+            transform: scale(1.01);
+        }
+        #languageHint option {
+            background: rgba(5, 10, 30, 0.95);
+            color: #ffffff;
+            padding: 0.75rem 1rem;
+            font-weight: 400;
+            border-bottom: 1px solid rgba(37, 99, 235, 0.4);
+        }
+        #languageHint option:hover {
+            background: rgba(10, 20, 50, 0.95);
+            border-bottom-color: #2563eb;
+        }
+        #languageHint option:checked {
+            background: rgba(10, 20, 50, 0.95);
+            font-weight: 600;
+            color: #ffffff;
+            border-bottom-color: #2563eb;
         }
         @keyframes fadeIn {
             from {
@@ -273,9 +321,114 @@
             background-color: #2563eb;
             color: white;
         }
+
+        .quick-response {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.2), rgba(59, 130, 246, 0.1));
+            border: 1px solid rgba(37, 99, 235, 0.3);
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #e6edf3;
+            text-align: left;
+            width: 100%;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+        }
+        .quick-response:hover {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.4), rgba(59, 130, 246, 0.2));
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+            color: #fff;
+        }
+        .quick-response:active {
+            transform: translateY(0) scale(1);
+        }
+        
+        /* Full-screen starfield canvas */
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            display: block;
+            pointer-events: none;
+        }
+
+        /* Ensure app content stays above */
+        .app-content { position: relative; z-index: 1; }
+
+        /* Glassmorphism panel */
+        .glass {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 16px;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+        .glass:hover {
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3), 0 0 40px rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 20px rgba(37, 99, 235, 1), 0 0 30px rgba(37, 99, 235, 0.8), 0 0 40px rgba(37, 99, 235, 0.6); }
+        }
+
+        @keyframes shine {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .mindcare-emoji {
+            animation: emojiGlow 1s ease-in-out infinite;
+        }
+
+        .mindcare-title {
+            position: relative;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            background-size: 200% 200%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-color: #ffffff;
+            animation: shine 3s ease-in-out infinite, textGlow 2s ease-in-out infinite;
+            transition: all 0.3s ease;
+        }
+
+        .mindcare-title::before {
+            content: '✨✨';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: sparkle 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes emojiGlow {
+            0%, 20% { text-shadow: 0 0 10px rgba(37, 99, 235, 0.8); }
+            21%, 40% { text-shadow: 0 0 20px rgba(37, 99, 235, 0.9); }
+            41%, 60% { text-shadow: 0 0 30px rgba(37, 99, 235, 1), 0 0 40px rgba(37, 99, 235, 0.8); }
+            61%, 80% { text-shadow: 0 0 20px rgba(37, 99, 235, 0.9); }
+            81%, 100% { text-shadow: 0 0 10px rgba(37, 99, 235, 0.8); }
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: translateX(-50%) scale(0.5); }
+            50% { opacity: 1; transform: translateX(-50%) scale(1); }
+        }
     </style>
 </head>
-<body class="min-h-screen bg-background">
+<body class="min-h-screen bg-background app-content">
+    <!-- Full-screen starfield canvas -->
+    <canvas id="starfield"></canvas>
+    
     <div class="status fixed top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm shadow-lg z-50" id="connectionStatus">🟡 Connecting...</div>
 
     <div class="min-h-screen pt-20 px-4 pb-8 max-w-7xl mx-auto">
@@ -298,37 +451,37 @@
         <div class="grid lg:grid-cols-12 gap-8">
             <!-- Sidebar with Quick Responses -->
             <div class="lg:col-span-4">
-                <div class="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
+                <div class="glass rounded-lg shadow-lg border border-white/10 p-6 text-gray-200">
                     <div class="mb-4">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Quick Start Topics</h3>
-                        <p class="text-gray-600 text-sm">Common challenges Indian students face</p>
+                        <h3 class="text-lg font-semibold text-gray-100 mb-2">Quick Start Topics</h3>
+                        <p class="text-gray-300 text-sm">Common challenges Indian students face</p>
                     </div>
                     <div class="space-y-3" id="quickResponses">
-                        <button class="quick-response w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-sm" data-text="I'm feeling anxious about upcoming exams 📚">
+                        <button class="quick-response w-full text-left p-3" data-text="I'm feeling anxious about upcoming exams 📚">
                             I'm feeling anxious about upcoming exams 📚
                         </button>
-                        <button class="quick-response w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-sm" data-text="Having trouble sleeping properly 😴">
+                        <button class="quick-response w-full text-left p-3" data-text="Having trouble sleeping properly 😴">
                             Having trouble sleeping properly 😴
                         </button>
-                        <button class="quick-response w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-sm" data-text="Feeling overwhelmed with studies and pressure 😰">
+                        <button class="quick-response w-full text-left p-3" data-text="Feeling overwhelmed with studies and pressure 😰">
                             Feeling overwhelmed with studies and pressure 😰
                         </button>
-                        <button class="quick-response w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-sm" data-text="Missing home and family deeply 🏠">
+                        <button class="quick-response w-full text-left p-3" data-text="Missing home and family deeply 🏠">
                             Missing home and family deeply 🏠
                         </button>
-                        <button class="quick-response w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-sm" data-text="Need help managing competitive exam stress 📖">
+                        <button class="quick-response w-full text-left p-3" data-text="Need help managing competitive exam stress 📖">
                             Need help managing competitive exam stress 📖
                         </button>
-                        <button class="quick-response w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-sm" data-text="Feeling lonely or socially isolated 😔">
+                        <button class="quick-response w-full text-left p-3" data-text="Feeling lonely or socially isolated 😔">
                             Feeling lonely or socially isolated 😔
                         </button>
-                        <button class="quick-response w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-sm" data-text="Worried about future career prospects 💼">
+                        <button class="quick-response w-full text-left p-3" data-text="Worried about future career prospects 💼">
                             Worried about future career prospects 💼
                         </button>
-                        <button class="quick-response w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-sm" data-text="Having family expectations pressure 👨‍👩‍👧‍👦">
+                        <button class="quick-response w-full text-left p-3" data-text="Having family expectations pressure 👨‍👩‍👧‍👦">
                             Having family expectations pressure 👨‍👩‍👧‍👦
                         </button>
-                        <button class="quick-response w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-sm" data-text="Dealing with financial stress 💰">
+                        <button class="quick-response w-full text-left p-3" data-text="Dealing with financial stress 💰">
                             Dealing with financial stress 💰
                         </button>
                     </div>
@@ -337,29 +490,32 @@
 
             <!-- Main Chat Area -->
             <div class="lg:col-span-8">
-                <div class="bg-white rounded-lg shadow-lg border border-gray-200 h-full flex flex-col">
+                <div class="glass rounded-lg shadow-lg border border-white/10 h-full flex flex-col">
                     <!-- Chat Header -->
-                    <div class="bg-blue-600 text-white p-6 rounded-t-lg">
+                    <div class="bg-blue-600/60 text-white p-6 rounded-t-lg backdrop-blur">
                         <div class="flex items-center space-x-4">
                             <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
                                 🤖
                             </div>
                             <div>
-                                <h1 class="text-2xl font-bold">🧠 MindCare Student Support</h1>
+                                <h1 class="text-2xl font-bold">
+                                    <span class="mindcare-emoji">🧠</span>
+                                    <span class="mindcare-title">MindCare Student Support</span>
+                                </h1>
                                 <p class="text-blue-100">Your compassionate AI companion for mental wellness</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Messages -->
-                    <div class="chat-messages flex-1 p-6 overflow-y-auto bg-gray-50" id="chatMessages">
+                    <div class="chat-messages flex-1 p-6 overflow-y-auto bg-white/0" id="chatMessages">
                         <div class="message bot animate-fade-in">
                             <div class="flex gap-4">
                                 <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold">
                                     AI
                                 </div>
-                                <div class="bg-white p-4 rounded-lg shadow-sm max-w-[75%]">
-                                    <div class="text-gray-900">
+                                <div class="bg-white/10 backdrop-blur p-4 rounded-lg shadow-sm max-w-[75%] border border-white/10">
+                                    <div class="text-gray-100">
                                         <div class="mood-indicator mood-happy">Welcome! 😊</div>
                                         Hello! I'm here to support you through your student journey. How are you feeling today? You can share anything that's on your mind - whether it's stress, homesickness, academic pressure, or just wanting to chat. I'm here to listen and help. 💙
                                         <br><br>
@@ -376,9 +532,9 @@
                     </div>
 
                     <!-- Chat Input -->
-                    <div class="border-t border-gray-200 p-6 bg-white">
+                    <div class="border-t border-white/10 p-6 bg-white/0">
                         <div class="flex gap-3">
-                            <select id="languageHint" class="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white">
+                            <select id="languageHint" class="px-3 py-2 border border-white/20 rounded-lg text-sm bg-white/10 text-gray-100">
                                 <option value="hi">🇮🇳 हिंदी (Hindi)</option>
                                 <option value="en">🇮🇳 English (Indian)</option>
                                 <option value="bn">🇮🇳 বাংলা (Bengali)</option>
@@ -402,8 +558,8 @@
                                 <option value="brx">🇮🇳 बड़ो (Bodo)</option>
                                 <option value="kok">🇮🇳 कोंकणी (Konkani)</option>
                             </select>
-                            <input type="text" id="messageInput" placeholder="अपना संदेश यहाँ लिखें..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <button id="sendBtn" onclick="sendMessage()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                            <input type="text" id="messageInput" placeholder="अपना संदेश यहाँ लिखें..." class="flex-1 px-4 py-2 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/10 text-gray-100 placeholder-gray-400">
+                            <button id="sendBtn" onclick="sendMessage()" class="bg-blue-600/90 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium">
                                 Send
                             </button>
                         </div>
@@ -414,6 +570,88 @@
     </div>
 
     <script>
+        // Starfield Canvas Animation
+        (function initStarfield(){
+            const canvas = document.getElementById('starfield');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            const nightGradient = (w, h) => {
+                const g = ctx.createLinearGradient(0, 0, 0, h);
+                g.addColorStop(0, '#0d1117');
+                g.addColorStop(1, '#1a1f2c');
+                return g;
+            };
+
+            let stars = [];
+            let width = 0, height = 0, gradient = null;
+
+            function resize() {
+                const dpr = window.devicePixelRatio || 1;
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = Math.floor(width * dpr);
+                canvas.height = Math.floor(height * dpr);
+                canvas.style.width = width + 'px';
+                canvas.style.height = height + 'px';
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                gradient = nightGradient(width, height);
+                initStars();
+            }
+
+            function random(min, max) { return Math.random() * (max - min) + min; }
+
+            function initStars() {
+                const density = 0.00035; // stars per pixel (further reduced)
+                const count = Math.max(50, Math.floor(width * height * density));
+                stars = new Array(count).fill(0).map(() => createStar(true));
+            }
+
+            function createStar(initial=false) {
+                const size = random(1, 4);
+                const speedBase = 18; // px/s for 1px star
+                const speed = speedBase * (1.25 - size / 4); // smaller => faster
+                return {
+                    x: random(0, width),
+                    y: initial ? random(0, height) : height + random(0, height * 0.2),
+                    size,
+                    opacity: random(0.4, 1),
+                    speed
+                };
+            }
+
+            let last = performance.now();
+            function tick(now) {
+                const dt = Math.min(0.05, (now - last) / 1000); // cap to avoid jumps
+                last = now;
+
+                // background
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, width, height);
+
+                // stars
+                for (let i = 0; i < stars.length; i++) {
+                    const s = stars[i];
+                    s.y -= s.speed * dt;
+                    if (s.y + s.size < 0) {
+                        stars[i] = createStar(false);
+                    }
+                    ctx.globalAlpha = s.opacity;
+                    ctx.fillStyle = '#e6edf3';
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.size * 0.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.globalAlpha = 1;
+
+                requestAnimationFrame(tick);
+            }
+
+            window.addEventListener('resize', resize);
+            resize();
+            requestAnimationFrame(tick);
+        })();
+
         // Test connection on page load
         fetch('/health')
             .then(response => response.json())
@@ -524,7 +762,7 @@
                         <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold">
                             You
                         </div>
-                        <div class="bg-blue-600 text-white p-4 rounded-lg shadow-sm max-w-[75%]">
+                        <div class="bg-blue-600/70 backdrop-blur text-white p-4 rounded-lg shadow-sm max-w-[75%] border border-white/10">
                             <div class="text-white">
                                 ${content}
                             </div>
@@ -561,8 +799,8 @@
                         <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold">
                             AI
                         </div>
-                        <div class="bg-white p-4 rounded-lg shadow-sm max-w-[75%]">
-                            <div class="text-gray-900">
+                        <div class="bg-white/10 backdrop-blur p-4 rounded-lg shadow-sm max-w-[75%] border border-white/10">
+                            <div class="text-gray-100">
                                 ${moodIndicator}
                                 ${emergencyAlert}
                                 ${content}
@@ -599,7 +837,9 @@
                 button.addEventListener('click', function() {
                     const text = this.getAttribute('data-text');
                     if (text) {
-                        sendMessage(text);
+                        const input = document.getElementById('messageInput');
+                        input.value = text;
+                        input.focus();
                     }
                 });
             });

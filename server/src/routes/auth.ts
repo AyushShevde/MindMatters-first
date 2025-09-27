@@ -52,8 +52,18 @@ router.post("/login", (req, res) => {
     return res.status(401).json({ error: "Invalid credentials" });
   }
   const token = signJwt({ userId: user.id, role: user.role, email: user.email });
-  db.prepare("INSERT INTO signins (user_id, ip, user_agent) VALUES (?, ?, ?)")
+  const result = db.prepare("INSERT INTO signins (user_id, ip, user_agent) VALUES (?, ?, ?)")
     .run(user.id, req.ip, req.get("user-agent") || null);
+  const newId = result.lastInsertRowid;
+  const newEntry = db.prepare(`
+    SELECT s.id, s.created_at as signed_in_at, s.ip, s.user_agent,
+           u.id as user_id, u.name, u.email, u.role
+    FROM signins s
+    JOIN users u ON u.id = s.user_id
+    WHERE s.id = ?
+  `).get(newId);
+  const io = req.app.get('io');
+  io.emit('entries-updated', { type: 'new', entry: newEntry });
   db.close();
   return res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
 });

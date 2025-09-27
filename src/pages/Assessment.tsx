@@ -34,6 +34,7 @@ import {
   AssessmentResult 
 } from "@/data/assessmentTools";
 import { useToast } from "@/hooks/use-toast";
+import { API_URL } from "@/lib/utils";
 
 // Use standardized assessment questions
 const questions = allAssessmentQuestions;
@@ -61,13 +62,62 @@ export default function Assessment() {
     setAnswers(prev => ({ ...prev, [questionId]: value }));
   };
 
-  const nextQuestion = () => {
+  const nextQuestion = async () => {
     if (currentQuestionIndex < filteredQuestions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
     } else {
       const results = calculateResults();
       const hasHighRisk = results.some(r => r.riskLevel === 'high');
       const hasFollowUp = results.some(r => r.requiresFollowUp);
+      
+      // Save full assessment to backend
+      try {
+        const token = localStorage.getItem("token");
+        if (token) {
+          const assessmentData = {
+            assessment_type: selectedAssessment,
+            answers,
+            results
+          };
+          
+          await fetch(`${API_URL}/assessment`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(assessmentData),
+          });
+          
+          // Also update profile scores
+          const scores = {
+            gad7_score: results.find(r => r.toolName === 'GAD-7')?.score || null,
+            phq9_score: results.find(r => r.toolName === 'PHQ-9')?.score || null,
+            ghq12_score: results.find(r => r.toolName === 'GHQ-12')?.score || null,
+          };
+          
+          await fetch(`${API_URL}/profile/me`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(scores),
+          });
+          
+          toast({
+            title: "Results Saved",
+            description: "Your assessment results have been saved.",
+          });
+        }
+      } catch (error) {
+        console.error('Failed to save assessment results:', error);
+        toast({
+          title: "Save Failed",
+          description: "Results calculated but not saved. You can retake or contact support.",
+          variant: "destructive",
+        });
+      }
       
       if (hasHighRisk) {
         toast({
