@@ -1,4 +1,4 @@
-###### Please do not fork, clone, or redistribute this repository without the explicit permission of the repository owner. Thank you.
+###### Please do not fork, clone, or redistribute this repository without the explicit permission of the repo owner...
 
 # MindMatters 🧠
 
@@ -331,11 +331,17 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Mental Health Organizations** - For expert guidance and validation
 - **Open Source Community** - For tools and libraries that made this possible
 
+### Important Note
+"Please do not fork, clone, or redistribute this repository without the explicit permission of the repository owner.
+Unauthorized use may lead to plagiarism and copyright violations.
+
+Kindly obtain consent and written permission from the owner before forking, cloning, or redistributing this repository.
+
+Thank you for your understanding."
 ---
 
 **MindMatters** - Empowering India's future leaders with accessible mental health support. 🧠💙
 
 *Built with ❤️ for Smart India Hackathon 2025*
 
-### Important Note
-"Please do not fork, clone, or redistribute this repository without the explicit permission of the repository owner. Doing so will lead to plagiarism and copyright issues and strict action will be taken against him/her. Thank you."
+
