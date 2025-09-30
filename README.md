@@ -1,3 +1,5 @@
+### Please do not fork or clone this repository without the permission of the owner
+
 # MindMatters 🧠
 
 **Revolutionizing Mental Health Support for Indian Higher Education Students**
@@ -332,3 +334,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **MindMatters** - Empowering India's future leaders with accessible mental health support. 🧠💙
 
 *Built with ❤️ for Smart India Hackathon 2025*
+
+# Note
+## "Please do not fork or clone this repository without the permission of the owner. Doing so will lead to plagiarism and copyright issues and strict action will be taken against him/her. Thank you."
