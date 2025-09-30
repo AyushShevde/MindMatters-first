@@ -334,9 +334,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ### Important Note
 "Please do not fork, clone, or redistribute this repository without the explicit permission of the repository owner.
 Unauthorized use may lead to plagiarism and copyright violations.
-
 Kindly obtain consent and written permission from the owner before forking, cloning, or redistributing this repository.
-
 Thank you for your understanding."
 ---
 
