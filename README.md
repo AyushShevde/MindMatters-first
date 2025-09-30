@@ -337,5 +337,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 *Built with ❤️ for Smart India Hackathon 2025*
 
-# Note
-## "Please do not fork, clone, or redistribute this repository without the explicit permission of the repository owner. Doing so will lead to plagiarism and copyright issues and strict action will be taken against him/her. Thank you."
+### Important Note
+"Please do not fork, clone, or redistribute this repository without the explicit permission of the repository owner. Doing so will lead to plagiarism and copyright issues and strict action will be taken against him/her. Thank you."
