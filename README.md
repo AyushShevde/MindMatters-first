@@ -1,4 +1,4 @@
-### Please do not fork or clone this repository without the permission of the owner
+##### Please do not fork or clone this repository without the permission of the owner
 
 # MindMatters 🧠
 
