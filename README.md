@@ -7,8 +7,8 @@
 [![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-43853D?logo=node.js&logoColor=white)](https://nodejs.org/)
 
-### Disclaimer
-##### Please do not fork, clone, or redistribute this repository without the explicit permission of the repository owner.
+##### Disclaimer
+###### Please do not fork, clone, or redistribute this repository without the explicit permission of the repository owner.
 
 ## 📋 Table of Contents
 - [About the Project](#-about-the-project)
