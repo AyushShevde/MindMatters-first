@@ -1,4 +1,4 @@
-###### Please do not fork, clone, or redistribute this repository...
+###### Please do not fork, clone, or redistribute this repository.
 
 # MindMatters 🧠
 
