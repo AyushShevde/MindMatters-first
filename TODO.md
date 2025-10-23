@@ -13,3 +13,5 @@
 - [x] Test API routes locally if possible
 - [x] Deploy to Vercel and verify functionality
 - [x] Disable Vercel authentication protection to allow public API access
+- [x] Update frontend API configuration to point to deployed Vercel backend
+- [x] Fix accessibility warnings in Dialog component

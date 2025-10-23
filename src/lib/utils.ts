@@ -5,5 +5,5 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const API_URL = (import.meta as any).env?.VITE_API_URL || "http://localhost:4000";
+export const API_URL = (import.meta as any).env?.VITE_API_URL || "https://server-i3puy8qhh-ayushshevdes-projects.vercel.app";
 
