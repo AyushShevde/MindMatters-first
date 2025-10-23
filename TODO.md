@@ -10,5 +10,6 @@
 - [x] Remove or adapt Socket.IO (not supported in Vercel serverless)
 - [x] Update database schema for PostgreSQL syntax
 - [x] Handle environment variables for Vercel Postgres
-- [ ] Test API routes locally if possible
-- [ ] Deploy to Vercel and verify functionality
+- [x] Test API routes locally if possible
+- [x] Deploy to Vercel and verify functionality
+- [x] Disable Vercel authentication protection to allow public API access
